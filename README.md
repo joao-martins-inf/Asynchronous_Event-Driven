@@ -1,7 +1,7 @@
+
 # Asynchronous Event Driven
 
----
-in this repo we will delve deeper into how Node implements event driven programming.
+In this repo we will delve deeper into how Node implements event driven programming.
 We will begin by unpacking the ideas and theories
 that event-driven languages and environments derive from and grapple
 with, in an effort to clear away misconceptions and encourage mastery.
@@ -10,9 +10,11 @@ technology—the event loop. We'll then go into more detail on how Node
 implements timers, callbacks, and I/O events, and how you as a Node
 developer can use them. We'll further discuss management of concurrency
 using modern tools such as Promises, Generators, and async/await. We'll
-practice the theory as we build up some simple but exemplary file and datadriven applications. These examples highlight Node's strengths, and show
+practice the theory as we build up some simple but exemplary file and data
+driven applications. These examples highlight Node's strengths, and show
 how Node is succeeding in its ambition to simplify network application
 designs
+
 ---
 ## Node unique design
 
