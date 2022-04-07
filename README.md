@@ -70,3 +70,7 @@ useful links:
 
 - [What is EVENT-DRIVEN PROGRAMMING?](https://www.youtube.com/watch?v=QQnz4QHNZKc)
 - [Node delegates I/O work to libuv](http://nikhilm.github.io/uvbook/basics.html#event-loops)
+- [What is event loop](https://www.youtube.com/watch?v=EI7sN1dDwcY)
+## Event loop ordering, phases, and priorities
+
+- [Three strategies for js Event-loop](https://www.youtube.com/watch?v=IvLltoCt8QU)
