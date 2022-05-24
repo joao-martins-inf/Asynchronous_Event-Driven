@@ -129,3 +129,56 @@ process a SIGUSR1 signal using the kill command:
 a little help to find PID in linux: ``ps aux | grep ipc.js``
 
 ## Child processes
+To create a child process, require Node's child_process module, and call the
+fork method. Pass the name of the program file the new process should
+execute:
+
+```javascript
+let cp = require("child_process");
+let child = cp.fork(__dirname + "/lovechild.js");
+```
+You can keep any number of subprocesses running with this method. On
+multicore machines, the operating system will distribute forked processes
+across the available hardware cores.
+
+Extending the preceding example, we can now have the forking process
+(``parent.js``) send, and listen for, messages from the forked process (``child.js``)
+
+Don't run ``lovechild.js`` yourself; ``parent.js`` will do that for you with fork!
+
+
+Another very powerful idea is to pass a network server an object to a child.
+This technique allows multiple processes, including the parent, to share the
+responsibility for servicing connection requests, spreading load across
+cores.
+
+For example, the following program will start a network server, fork a child
+process, and pass the server reference from the parent down to the child:
+
+```javascript
+// net-parent.js
+const path = require('path');
+let child = require("child_process").fork(path.join(__dirname, "net-child.js"));
+let server = require("net").createServer();
+server.on("connection", (socket) => {
+ socket.end("Parent handled connection");
+});
+server.listen(8080, () => {
+ child.send("Parent passing down server", server);
+});
+```
+
+In addition to passing a message to a child process as the first argument to
+send, the preceding code also sends the server handle to itself as a second
+argument. Our child server can now help out with the family's service
+business:
+
+```javascript
+// net-child.js
+process.on("message", function(message, server) {
+ console.log(message);
+ server.on("connection", function(socket) {
+ socket.end("Child handled connection");
+ });
+});
+```
