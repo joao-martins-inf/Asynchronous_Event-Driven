@@ -182,3 +182,66 @@ process.on("message", function(message, server) {
  });
 });
 ```
+
+## File events
+
+Most applications make some use of the filesystem, in particular, those that
+function as web services. As well, a professional application will likely log
+information about usage, cache pre-rendered data views, or make other
+changes to files and directory structures. Node allows developers to register
+for notifications on file events through the``fs.watch``method. The watch
+method broadcasts changed events on both files and directories.\
+\
+\
+The ``watch`` method accepts three arguments:
+- The file or directory path being watched. If the file does not exist, an
+ENOENT (no entity) error will be thrown, so using fs.exists at some
+prior useful point is encouraged.
+- An optional options object, including:
+  - Persistent (Boolean default true): Node keeps processes alive, as
+  long as there is something to do. Set this option to false to let
+  Node close the process even if your code still has a file watcher
+  watching.
+  - Recursive (Boolean default false): Whether to automatically
+  descend into subdirectories. Note: This is not consistently
+  implemented across platforms. For this reason, and for
+  performance reasons, you should explicitly control the file list
+  you are watching, rather than randomly watching directories.
+  - Encoding (String default utf8): Character encoding of passed
+  filenames. You probably don't need to change this.
+- The listener function, which receives two arguments:
+  The name of the change event (one of rename or change)
+  The filename that was changed (important when watching
+  directories)
+\
+
+This example will set up a watcher on itself, change its own filename, and
+exit:
+
+```javascript
+const fs = require('fs');
+fs.watch(__filename, { persistent: false }, (event, filename) => {
+ console.log(event);
+ console.log(filename);
+})
+setImmediate(function() {
+ fs.rename(__filename, __filename + '.new', () => {});
+});
+```
+
+Close your watcher channel whenever you want to use code like this:
+```javascript
+let w = fs.watch('file', () => {});
+w.close();
+```
+
+It should be noted that fs.watch depends a great deal on how the host OS
+handles file events, and the Node documentation says this:\
+"The ``fs.watch`` API is not 100% consistent across platforms, and is
+unavailable in some situations."
+
+## Deferred execution
+
+### process.nextTick
+
+
