@@ -313,3 +313,37 @@ will starve the event loop, churn your process on the microprocessor, and
 could prevent your program from discovering the I/O that Node has
 finished.
 
+
+## setImmediate
+
+setImmediate is technically a member of the class of timers, along with
+setInterval and setTimeout . However, there is no sense of time associated with
+it — there is no number of milliseconds to wait for an argument to be sent.
+This method is really more of a sibling to process.nextTick, differing in one
+very important way: while callbacks queued by nextTick will execute before
+I/O and timer events, callbacks queued by setImmediate will be called after
+I/O events.
+
+## setTimeout
+
+```javascript
+setTimeout(a, 1000);
+setTimeout(b, 1001);
+```
+One would expect that function b would execute after function a. However,
+this cannot be guaranteed — a may follow b, or the other way around.
+
+Now, consider the subtle difference present in the following code snippet:
+```javascript
+setTimeout(a, 1000);
+setTimeout(b, 1000);
+```
+The execution order of a and b are predictable in this case. Node essentially
+maintains an object map grouping callbacks with identical timeout
+lengths
+
+## setInterval
+Every 100 milliseconds the sent callback function will execute, a process
+that can be cancelled with clearInterval(intervalReference).
+
+## unref and ref
